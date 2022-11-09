@@ -1,0 +1,12 @@
+.list {
+  padding: 0;
+  margin-left: 15px;
+}
+.link {
+  margin-bottom: 10px;
+}
+.btn {
+  margin-left: 10px;
+  background-color: beige;
+  border-radius: 5px;
+}
