@@ -8,24 +8,24 @@ import ContactForm from './ContactForm/ContactForm';
 import { useState, useEffect } from 'react';
 
 const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem('contacts')) || []
-  );
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(localStorage.getItem('contact')) || [];
+  });
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
+    localStorage.setItem('contact', JSON.stringify(contacts));
   }, [contacts]);
 
-  const addContact = (name, number) => {
+  const hadleSubmit = (name, number) => {
     const contact = {
       id: nanoid(),
       name,
       number,
     };
 
-    const isExistContact = contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
+    const isExistContact = contacts.find(
+      newContact => newContact.name === contact.name
     );
 
     if (isExistContact) {
@@ -36,27 +36,25 @@ const App = () => {
     setContacts(prevState => [contact, ...prevState]);
   };
 
-  const filterContacts = () => {
+  const getFilterContacts = () => {
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
 
-  const deleteContact = contactId => {
-    setContacts(prevState =>
-      prevState.filter(contact => contact.id !== contactId)
-    );
+  const deleteContact = id => {
+    setContacts(prevState => prevState.filter(contact => contact.id !== id));
   };
 
   return (
     <div className={css.conteiner}>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={addContact} />
+      <ContactForm hadleSubmit={hadleSubmit} />
       <h2>Contacts</h2>
-      <Filter value={filter} onChange={e => setFilter(e.currentTarget.value)} />
+      <Filter value={filter} onChange={e => setFilter(e.target.value)} />
       <ContactList
-        contacts={filterContacts()}
         onDeleteContact={deleteContact}
+        contacts={getFilterContacts()}
       />
     </div>
   );
